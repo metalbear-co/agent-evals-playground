@@ -46,15 +46,26 @@ kubectl rollout status -n shop deployment/chat-service
 That brings up Postgres, Kafka and RabbitMQ in `infra`, the shop services and
 the visualization in `shop`, and seeds a catalogue.
 
-**2. Point the evals at it.**
+**2. Give the agent a credential.**
 
 ```bash
-cp .env.example .env     # then edit
-export EVAL_KUBE_CONTEXT=$(kubectl config current-context)
-export ANTHROPIC_API_KEY=sk-ant-...
+kubectl create secret generic shopping-agent -n shop \
+  --from-literal=anthropic-api-key=sk-ant-...
+kubectl rollout restart -n shop deployment/chat-service
 ```
 
-**3. Run them.**
+The key lives in the cluster, not on your machine. A run picks it up from the
+target along with everything else, so nobody needs a copy locally to score the
+suite — which is the point of borrowing a workload's environment rather than
+reproducing it.
+
+**3. Point the evals at the cluster.**
+
+```bash
+export EVAL_KUBE_CONTEXT=$(kubectl config current-context)
+```
+
+**4. Run them.**
 
 ```bash
 cd apps/shop/chat-service
@@ -91,16 +102,15 @@ Everything environment-specific is an environment variable or one marked line.
 | `EVAL_KUBE_CONTEXT` | current context | which cluster to target |
 | `EVAL_NAMESPACE` | `shop` | namespace the target runs in |
 | `EVAL_TARGET` | `chat-service` | deployment whose environment to borrow |
-| `ANTHROPIC_API_KEY` | — | used by the eval process |
+| `ANTHROPIC_API_KEY` | from the target | only needed for a fixture run |
 
-The storefront's own chat runs the agent *inside* the cluster, so it needs its
-own credential. Skip this and the shop still works — the chat just hands over to
-a human instead of answering:
+A run under mirrord takes the key from the target's environment, so the last row
+is usually nothing you set. Export it locally only to score against the fixture,
+where there is no cluster to take it from.
 
-```bash
-kubectl create secret generic shopping-agent -n shop \
-  --from-literal=anthropic-api-key=sk-ant-...
-```
+Skipping the `shopping-agent` secret entirely leaves the shop working — the
+storefront chat hands over to a human instead of answering, and the evals have no
+credential to run with.
 
 ### Seeing the storefront
 
