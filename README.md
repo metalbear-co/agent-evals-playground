@@ -39,7 +39,21 @@ covers the dataset, the scoring modes and the judge in detail.
 - an Anthropic API key
 - Node 20+
 
-All container images are published publicly, so nothing here needs building.
+All container images are published publicly, so on an **amd64** cluster nothing
+here needs building.
+
+On **arm64** (kind or minikube on Apple Silicon) four of them will not pull:
+`chat-service`, `metal-mart-frontend` and the two visualization images are
+published for linux/amd64 only. `inventory-service` and `order-service` are
+multi-arch and come up fine. Either build the four locally from their
+Dockerfiles and `kind load docker-image` them, or create the cluster as amd64
+and let Docker emulate it:
+
+```bash
+DOCKER_DEFAULT_PLATFORM=linux/amd64 kind create cluster
+```
+
+Emulated Kafka and Postgres are slow, so prefer an amd64 cluster if you have one.
 
 ## Getting it running
 
