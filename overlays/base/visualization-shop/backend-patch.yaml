@@ -1,0 +1,14 @@
+# Cosmetic: the UI banner reads CLUSTER_NAME. Set it to whatever you call the
+# cluster you are pointing at.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visualization-shop-backend
+spec:
+  template:
+    spec:
+      containers:
+        - name: backend
+          env:
+            - name: CLUSTER_NAME
+              value: agent-evals

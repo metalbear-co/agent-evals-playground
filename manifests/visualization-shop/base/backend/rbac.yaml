@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: visualization-shop-backend
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: visualization-shop-backend-reader
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "deployments/status"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["mirrord.metalbear.co"]
+  resources: ["mirrordclustersessions"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["queues.mirrord.metalbear.co"]
+  resources: ["mirrordkafkaephemeraltopics", "mirrordclustersplitsessions", "mirrordsqssessions", "mirrordrmqsessions"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["dbs.mirrord.metalbear.co"]
+  resources: ["pgbranchdatabases", "branchdatabases"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["preview.mirrord.metalbear.co"]
+  resources: ["previewsessions"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: visualization-shop-backend-reader
+subjects:
+  - kind: ServiceAccount
+    name: visualization-shop-backend
+    namespace: visualization-shop
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: visualization-shop-backend-reader

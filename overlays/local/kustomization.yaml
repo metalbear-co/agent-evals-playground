@@ -1,0 +1,13 @@
+# The demo on any cluster at all — kind, minikube, a namespace someone gave you.
+#
+# No ingress, no certificate, no cloud types. Reach the storefront with:
+#
+#   kubectl port-forward -n shop svc/metal-mart-frontend 3000:80
+#   open http://localhost:3000/shop
+#
+# The evals do not go through this. They target chat-service directly through
+# mirrord, so they work the same whichever overlay you applied.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base

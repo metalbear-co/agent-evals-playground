@@ -1,0 +1,17 @@
+# Reaches the storefront over HTTPS on a domain you own.
+#
+# Needs three things that are yours, not ours. Set them in ingress.yaml, which
+# marks each one:
+#
+#   1. a domain pointed at the static IP below
+#   2. a reserved *global* external static IP (regional will not attach)
+#   3. GKE — ManagedCertificate and BackendConfig are Google types
+#
+# Anywhere else, use ../local instead.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+  - ingress.yaml
+patches:
+  - path: frontend-service-patch.yaml

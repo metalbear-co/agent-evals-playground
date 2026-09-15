@@ -1,0 +1,20 @@
+# Cluster visualization for the demo cluster.
+#
+# Deployed into `shop` rather than a namespace of its own, so that a GCE Ingress
+# can reach it: those route only to Services in their own namespace, and the
+# Ingress in ../gke lives in `shop`. Gateway API has no such restriction, so a
+# cluster fronted that way can move these wherever it likes.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: shop
+
+resources:
+  - ../../../manifests/visualization-shop
+  - backendconfig.yaml
+
+patches:
+  - path: backend-patch.yaml
+  - path: service-frontend-patch.yaml
+  - path: service-backend-patch.yaml
+  - path: clusterrolebinding-patch.yaml

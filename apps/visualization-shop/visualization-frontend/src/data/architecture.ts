@@ -1,0 +1,417 @@
+export type ArchitectureNode = {
+  id: string;
+  label: string;
+  stack?: string;
+  description: string;
+  group:
+    | "entry"
+    | "infra"
+    | "service"
+    | "data"
+    | "queue"
+    | "mirrord";
+  repoPath?: string;
+  zone?: "cluster" | "external" | "local";
+};
+
+export type ArchitectureEdge = {
+  id: string;
+  source: string;
+  target: string;
+  label?: string;
+  intent?: "request" | "data" | "mirrored" | "control";
+};
+
+export type ArchitectureZone = {
+  id: string;
+  label: string;
+  description: string;
+  nodes: string[];
+  border: string;
+  background: string;
+  accent: string;
+};
+
+export const architectureZones: ArchitectureZone[] = [
+  {
+    id: "local",
+    label: "Local Machine",
+    description: "Developer laptop running the binary with mirrord-layer inserted.",
+    nodes: ["local-process", "mirrord-layer"],
+    border: "#60A5FA",
+    background: "rgba(191, 219, 254, 0.4)",
+    accent: "#3B82F6",
+  },
+  {
+    id: "cluster",
+    label: "GKE Cluster",
+    description: "Ingress, services, data stores, and mirrord operator running in-cluster.",
+    nodes: [
+      "ingress",
+      "metal-mart-frontend",
+      "inventory-service",
+      "order-service",
+      "payment-service",
+      "receipt-service",
+      "delivery-service",
+      "notifications-service",
+      "chat-service",
+      "kafka",
+      "sqs",
+      "rabbitmq",
+      "postgres-inventory",
+      "postgres-orders",
+      "postgres-deliveries",
+      "mirrord-operator",
+      "mirrord-agent",
+    ],
+    border: "#4F46E5",
+    background: "rgba(233, 228, 255, 0.4)",
+    accent: "#4F46E5",
+  },
+];
+
+export const architectureNodes: ArchitectureNode[] = [
+  {
+    id: "user",
+    label: "External user",
+    stack: "Browser / curl",
+    description: "Initiates traffic through the storefront UI.",
+    group: "entry",
+    zone: "external",
+  },
+  {
+    id: "ingress",
+    label: "Ingress + Service",
+    stack: "GKE",
+    description: "Public entrypoint routing traffic to the MetalMart frontend.",
+    group: "infra",
+    zone: "cluster",
+  },
+  {
+    id: "mirrord-operator",
+    label: "mirrord Operator",
+    stack: "Kubernetes controller",
+    description: "Injects the mirrord agent when a developer session is attached.",
+    group: "mirrord",
+    zone: "cluster",
+  },
+  {
+    id: "mirrord-agent",
+    label: "mirrord Agent",
+    stack: "Injected sidecar",
+    description: "Appears in pods when mirrord sessions run.",
+    group: "mirrord",
+    zone: "cluster",
+  },
+  {
+    id: "mirrord-layer",
+    label: "mirrord-layer",
+    stack: "LD_PRELOAD / DLL injection",
+    description: "Intercepts libc (Linux/macOS) and kernel32 (Windows) calls from the local process.",
+    group: "mirrord",
+    zone: "local",
+  },
+  {
+    id: "local-process",
+    label: "Local process",
+    stack: "Developer machine",
+    description: "Runs your binary with mirrord-layer injected.",
+    group: "mirrord",
+    zone: "local",
+  },
+  {
+    id: "metal-mart-frontend",
+    label: "metal-mart-frontend",
+    stack: "Next.js / React",
+    description:
+      "E-commerce storefront with product catalog, cart, checkout, and support chat (publishes chat messages to Kafka).",
+    group: "service",
+    repoPath: "shop/metal-mart-frontend/",
+    zone: "cluster",
+  },
+  {
+    id: "inventory-service",
+    label: "inventory-service",
+    stack: "Node.js / Express",
+    description: "Product catalog and stock management.",
+    group: "service",
+    repoPath: "shop/inventory-service/",
+    zone: "cluster",
+  },
+  {
+    id: "order-service",
+    label: "order-service",
+    stack: "Node.js / Express",
+    description: "Order orchestration: stock check, payment, Kafka emit, notifications.",
+    group: "service",
+    repoPath: "shop/order-service/",
+    zone: "cluster",
+  },
+  {
+    id: "payment-service",
+    label: "payment-service",
+    stack: "Node.js / Express",
+    description: "Mock payment processing (always succeeds).",
+    group: "service",
+    repoPath: "shop/payment-service/",
+    zone: "cluster",
+  },
+  {
+    id: "receipt-service",
+    label: "receipt-service",
+    stack: "Node.js / Express",
+    description: "Generates receipts after payment processing.",
+    group: "service",
+    repoPath: "shop/receipt-service/",
+    zone: "cluster",
+  },
+  {
+    id: "delivery-service",
+    label: "delivery-service",
+    stack: "Node.js / Express",
+    description: "Kafka consumer that creates delivery records.",
+    group: "service",
+    repoPath: "shop/delivery-service/",
+    zone: "cluster",
+  },
+  // chat-service is declared before notifications-service so the dagre layout
+  // places it higher in the diagram, next to its Kafka producer.
+  {
+    id: "chat-service",
+    label: "chat-service",
+    stack: "Node.js / Express",
+    description: "Consumes support-chat messages from Kafka, streams them to browsers over SSE.",
+    group: "service",
+    repoPath: "shop/chat-service/",
+    zone: "cluster",
+  },
+  {
+    id: "notifications-service",
+    label: "notifications-service",
+    stack: "Node.js / Express",
+    description: "RabbitMQ consumer for order notification messages after checkout.",
+    group: "service",
+    repoPath: "shop/notifications-service/",
+    zone: "cluster",
+  },
+  {
+    id: "kafka",
+    label: "Kafka Producer",
+    stack: "orders · support-chat",
+    description:
+      "Receives order events from the order service and support-chat messages from the frontend.",
+    group: "queue",
+    zone: "cluster",
+  },
+  {
+    id: "sqs",
+    label: "SQS Queue",
+    stack: "payments",
+    description: "Receives payment messages from order-service; consumed by payment-service.",
+    group: "queue",
+    zone: "cluster",
+  },
+  {
+    id: "rabbitmq",
+    label: "RabbitMQ",
+    stack: "order-notifications",
+    description: "Delivers order notifications to notifications-service.",
+    group: "queue",
+    zone: "cluster",
+  },
+  {
+    id: "postgres-inventory",
+    label: "PostgreSQL",
+    stack: "Inventory DB",
+    description: "Stores product catalog and stock levels.",
+    group: "infra",
+    zone: "cluster",
+  },
+  {
+    id: "postgres-orders",
+    label: "PostgreSQL",
+    stack: "Orders DB",
+    description: "Stores order records and status.",
+    group: "infra",
+    zone: "cluster",
+  },
+  {
+    id: "postgres-deliveries",
+    label: "PostgreSQL",
+    stack: "Deliveries DB",
+    description: "Stores delivery tracking records.",
+    group: "infra",
+    zone: "cluster",
+  },
+];
+
+export const architectureEdges: ArchitectureEdge[] = [
+  {
+    id: "user-to-ingress",
+    source: "user",
+    target: "ingress",
+    label: "Browse store",
+    intent: "request",
+  },
+  {
+    id: "ingress-to-frontend",
+    source: "ingress",
+    target: "metal-mart-frontend",
+    label: "Route to frontend",
+    intent: "request",
+  },
+  {
+    id: "frontend-to-inventory",
+    source: "metal-mart-frontend",
+    target: "inventory-service",
+    label: "GET /products",
+    intent: "request",
+  },
+  {
+    id: "frontend-to-orders",
+    source: "metal-mart-frontend",
+    target: "order-service",
+    label: "POST /orders",
+    intent: "request",
+  },
+  {
+    id: "frontend-to-deliveries",
+    source: "metal-mart-frontend",
+    target: "delivery-service",
+    label: "GET /deliveries",
+    intent: "request",
+  },
+  {
+    id: "order-to-inventory",
+    source: "order-service",
+    target: "inventory-service",
+    label: "Check stock",
+    intent: "request",
+  },
+  {
+    id: "order-to-sqs",
+    source: "order-service",
+    target: "sqs",
+    label: "Publish payment",
+    intent: "data",
+  },
+  {
+    id: "sqs-to-payment",
+    source: "sqs",
+    target: "payment-service",
+    label: "Consume payment",
+    intent: "data",
+  },
+  {
+    id: "payment-to-receipt",
+    source: "payment-service",
+    target: "receipt-service",
+    label: "Generate receipt",
+    intent: "request",
+  },
+  {
+    id: "frontend-to-kafka",
+    source: "metal-mart-frontend",
+    target: "kafka",
+    label: "Publish chat message",
+    intent: "data",
+  },
+  {
+    id: "order-to-kafka",
+    source: "order-service",
+    target: "kafka",
+    label: "Emit order event",
+    intent: "data",
+  },
+  {
+    id: "order-to-rabbitmq",
+    source: "order-service",
+    target: "rabbitmq",
+    label: "Publish notification",
+    intent: "data",
+  },
+  {
+    id: "rabbitmq-to-notifications",
+    source: "rabbitmq",
+    target: "notifications-service",
+    label: "Consume messages",
+    intent: "data",
+  },
+  {
+    id: "order-to-postgres",
+    source: "order-service",
+    target: "postgres-orders",
+    label: "Store order",
+    intent: "data",
+  },
+  {
+    id: "inventory-to-postgres",
+    source: "inventory-service",
+    target: "postgres-inventory",
+    label: "Product catalog",
+    intent: "data",
+  },
+  {
+    id: "kafka-to-delivery",
+    source: "kafka",
+    target: "delivery-service",
+    label: "Process orders",
+    intent: "data",
+  },
+  {
+    id: "kafka-to-chat",
+    source: "kafka",
+    target: "chat-service",
+    label: "Consume chat messages",
+    intent: "data",
+  },
+  {
+    id: "delivery-to-postgres",
+    source: "delivery-service",
+    target: "postgres-deliveries",
+    label: "Create delivery",
+    intent: "data",
+  },
+  {
+    id: "layer-to-agent",
+    source: "mirrord-layer",
+    target: "mirrord-operator",
+    intent: "mirrored",
+  },
+  {
+    id: "operator-to-agent-mirrored",
+    source: "mirrord-operator",
+    target: "mirrord-agent",
+    label: "Launch agent",
+    intent: "mirrored",
+  },
+  {
+    id: "local-to-layer",
+    source: "local-process",
+    target: "mirrord-layer",
+    label: "LD_PRELOAD hook",
+    intent: "mirrored",
+  },
+  {
+    id: "agent-to-target",
+    source: "mirrord-agent",
+    target: "order-service",
+    label: "Impersonate target pod",
+    intent: "mirrored",
+  },
+];
+
+export const groupPalette: Record<
+  ArchitectureNode["group"],
+  { background: string; border: string; text: string }
+> = {
+  entry: { background: "#FFFFFF", border: "#0F172A", text: "#111827" },
+  infra: { background: "#FFFFFF", border: "#6B7280", text: "#111827" },
+  /** Core services — amber/yellow border (same hue as the former “Queues & Streams” accent). */
+  service: { background: "#FFFBEB", border: "#CA8A04", text: "#111827" },
+  data: { background: "#FFFFFF", border: "#DC2626", text: "#111827" },
+  /** Kafka, SQS, RabbitMQ — same as `infra` (no separate “Queues & Streams” legend). */
+  queue: { background: "#FFFFFF", border: "#6B7280", text: "#111827" },
+  mirrord: { background: "#EEF2FF", border: "#4F46E5", text: "#111827" },
+};

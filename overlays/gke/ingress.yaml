@@ -1,0 +1,91 @@
+# HTTPS entry point for the storefront on the demo cluster.
+#
+# A Google-managed certificate on a global external Application Load Balancer,
+# so the demo runs on a real https:// URL instead of a bare IP. Browsers upgrade
+# http:// to https:// on their own, and an L4 service listening only on :80
+# answers that with a timeout — which is what this replaces.
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: agent-evals-cert
+  namespace: shop
+spec:
+  domains:
+    # CHANGE ME - the domain you own, pointed at the static IP below.
+    - agent-evals.metalbear.dev
+---
+# Two settings here earn their place.
+#
+# healthCheck.requestPath: the frontend serves under /shop and returns 404 at
+# /, which is where the load balancer probes by default. Left alone, every
+# backend is marked unhealthy and the site answers 502. The repo hit this on
+# playground already — see overlays/gke/shop/healthcheckpolicy.yaml.
+#
+# timeoutSec: the support chat is a server-sent-event stream that stays open.
+# The 30s default would cut it. chat-service does send a :ka heartbeat every 15
+# seconds, which alone keeps the connection from idling out, but a short
+# backend timeout closes long-lived streams regardless of traffic.
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: frontend-backendconfig
+  namespace: shop
+spec:
+  timeoutSec: 3600
+  healthCheck:
+    type: HTTP
+    port: 3000
+    requestPath: /shop
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: metal-mart-frontend
+  namespace: shop
+  annotations:
+    kubernetes.io/ingress.class: gce
+    # CHANGE ME - name of your reserved global static IP, not the address itself.
+    kubernetes.io/ingress.global-static-ip-name: agent-evals-tls
+    networking.gke.io/managed-certificates: agent-evals-cert
+    # Serve http:// as well as https://. The browser upgrade is what we are
+    # accommodating, not enforcing — an http:// link should still work.
+    kubernetes.io/ingress.allow-http: "true"
+spec:
+  rules:
+    # CHANGE ME - same domain as the certificate above.
+    - host: agent-evals.metalbear.dev
+      http:
+        paths:
+          # The visualization serves under /visualization-shop and calls its own
+          # backend under /visualization-shop/api. Both are matched ahead of the
+          # catch-all so the storefront does not swallow them; the api prefix is
+          # listed first because it is the more specific of the two.
+          - path: /visualization-shop/api/*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: visualization-shop-backend
+                port:
+                  number: 80
+          - path: /visualization-shop
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: visualization-shop-frontend
+                port:
+                  number: 80
+          - path: /visualization-shop/*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: visualization-shop-frontend
+                port:
+                  number: 80
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: metal-mart-frontend
+                port:
+                  number: 80

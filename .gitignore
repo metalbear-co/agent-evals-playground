@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.next/
+.env
+apps/shop/chat-service/eval/results/

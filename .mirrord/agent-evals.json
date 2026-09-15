@@ -1,0 +1,21 @@
+{
+  "kube_context": "{{ get_env(name='EVAL_KUBE_CONTEXT', default='') }}",
+  "target": {
+    "namespace": "{{ get_env(name='EVAL_NAMESPACE', default='shop') }}",
+    "path": {
+      "deployment": "{{ get_env(name='EVAL_TARGET', default='chat-service') }}"
+    }
+  },
+  "ci": {
+    "output_dir": "/tmp/mirrord"
+  },
+  "feature": {
+    "network": {
+      "incoming": "off",
+      "outgoing": true
+    },
+    "fs": {
+      "mode": "read"
+    }
+  }
+}
