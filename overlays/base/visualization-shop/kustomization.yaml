@@ -11,10 +11,7 @@ namespace: shop
 
 resources:
   - ../../../manifests/visualization-shop
-  - backendconfig.yaml
 
 patches:
   - path: backend-patch.yaml
-  - path: service-frontend-patch.yaml
-  - path: service-backend-patch.yaml
   - path: clusterrolebinding-patch.yaml

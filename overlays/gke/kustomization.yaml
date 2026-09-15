@@ -13,5 +13,8 @@ kind: Kustomization
 resources:
   - ../base
   - ingress.yaml
+  - visualization-backendconfig.yaml
 patches:
   - path: frontend-service-patch.yaml
+  - path: visualization-frontend-service-patch.yaml
+  - path: visualization-backend-service-patch.yaml
