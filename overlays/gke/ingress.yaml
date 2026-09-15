@@ -8,12 +8,13 @@
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: agent-evals-cert
+  name: shop-cert
   namespace: shop
 spec:
   domains:
     # CHANGE ME - the domain you own, pointed at the static IP below.
-    - agent-evals.metalbear.dev
+    # A real one looks like: agent-evals.metalbear.dev
+    - shop.example.com
 ---
 # Two settings here earn their place.
 #
@@ -45,16 +46,17 @@ metadata:
   namespace: shop
   annotations:
     kubernetes.io/ingress.class: gce
-    # CHANGE ME - name of your reserved global static IP, not the address itself.
-    kubernetes.io/ingress.global-static-ip-name: agent-evals-tls
-    networking.gke.io/managed-certificates: agent-evals-cert
+    # CHANGE ME - the NAME of your reserved global static IP, not the address.
+    #   gcloud compute addresses create shop-static-ip --global
+    kubernetes.io/ingress.global-static-ip-name: shop-static-ip
+    networking.gke.io/managed-certificates: shop-cert
     # Serve http:// as well as https://. The browser upgrade is what we are
     # accommodating, not enforcing — an http:// link should still work.
     kubernetes.io/ingress.allow-http: "true"
 spec:
   rules:
     # CHANGE ME - same domain as the certificate above.
-    - host: agent-evals.metalbear.dev
+    - host: shop.example.com
       http:
         paths:
           # The visualization serves under /visualization-shop and calls its own
