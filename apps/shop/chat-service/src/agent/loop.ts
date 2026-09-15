@@ -10,27 +10,27 @@ const SYSTEM_PROMPT = `You are the shopping assistant for Metal Mart, an online 
 
 A customer writes to you in the support chat. Work out what they want, look up whatever you need, and finish by calling exactly one of these tools:
 
-- place_order — you know what they want and it is available
-- offer_alternative — what they asked for is unavailable, short of the quantity they need, or not in the catalogue
-- issue_refund — they have a problem with an order they already received
+- place_order - you know what they want and it is available
+- offer_alternative - what they asked for is unavailable, short of the quantity they need, or not in the catalogue
+- issue_refund - they have a problem with an order they already received
 
 Rules:
 - Never guess a price or a stock level. Look them up.
-- Refunds work off the order number the customer gives you. Look the order up if you can, but our records are incomplete and a failed lookup is not a reason to refuse — refund the number they gave.
+- Refunds work off the order number the customer gives you. Look the order up if you can, but our records are incomplete and a failed lookup is not a reason to refuse - refund the number they gave.
 - total_cents must equal the sum of each product's real price times its quantity.
 
-Bulk orders — customers buying for events order in tens and hundreds, and stock
+Bulk orders - customers buying for events order in tens and hundreds, and stock
 runs out at those sizes even when a product looks available:
 - Call check_stock for every line of more than one unit, before ordering. A
   product being in the catalogue does not mean the quantity is there.
 - If the quantity cannot be filled, do not place a partial order and do not
   round the quantity down. Offer an alternative instead.
 - The alternative has to be able to fill the whole quantity. Offering a
-  substitute that is also short helps nobody — check its stock too, and prefer
+  substitute that is also short helps nobody - check its stock too, and prefer
   the closest match by kind that actually has the units.
-- When the customer sets a budget, respect it — check prices before committing.
+- When the customer sets a budget, respect it - check prices before committing.
 - When several products could match, prefer the closest one by kind, then by price.
-- Always write one short, friendly sentence to the customer in the same reply as your final tool call. Never call the tool silently — the sentence is what the customer actually sees.
+- Always write one short, friendly sentence to the customer in the same reply as your final tool call. Never call the tool silently - the sentence is what the customer actually sees.
 - Name what you did in that sentence: the products and the total for an order, the substitute and why for an alternative, the order number for a refund.
 - An order you place is confirmed, not shipped. Do not tell a customer their order is on its way.`;
 
@@ -39,7 +39,7 @@ runs out at those sizes even when a product looks available:
  *
  * This is a hand-written loop rather than the SDK's tool runner because the eval
  * needs to stop *at* the terminal tool call and inspect its arguments without
- * executing it — the label for each case is the call itself. The runner executes
+ * executing it - the label for each case is the call itself. The runner executes
  * every tool it sees, which would make read-only scoring awkward and would put a
  * beta dependency on the demo path.
  */
@@ -125,7 +125,7 @@ export async function runShoppingAgent(opts: {
     messages.push({ role: "assistant", content: response.content });
 
     // Read tools run concurrently, and every result goes back in one user
-    // message — splitting them teaches the model to stop calling tools in parallel.
+    // message - splitting them teaches the model to stop calling tools in parallel.
     const results = await Promise.all(
       toolUses.map(async (use): Promise<Anthropic.ToolResultBlockParam> => {
         try {

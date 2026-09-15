@@ -408,10 +408,10 @@ export const groupPalette: Record<
 > = {
   entry: { background: "#FFFFFF", border: "#0F172A", text: "#111827" },
   infra: { background: "#FFFFFF", border: "#6B7280", text: "#111827" },
-  /** Core services — amber/yellow border (same hue as the former “Queues & Streams” accent). */
+  /** Core services - amber/yellow border (same hue as the former “Queues & Streams” accent). */
   service: { background: "#FFFBEB", border: "#CA8A04", text: "#111827" },
   data: { background: "#FFFFFF", border: "#DC2626", text: "#111827" },
-  /** Kafka, SQS, RabbitMQ — same as `infra` (no separate “Queues & Streams” legend). */
+  /** Kafka, SQS, RabbitMQ - same as `infra` (no separate “Queues & Streams” legend). */
   queue: { background: "#FFFFFF", border: "#6B7280", text: "#111827" },
   mirrord: { background: "#EEF2FF", border: "#4F46E5", text: "#111827" },
 };

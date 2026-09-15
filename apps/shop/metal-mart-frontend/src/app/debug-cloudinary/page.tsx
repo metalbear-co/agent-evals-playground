@@ -38,7 +38,7 @@ export default function DebugCloudinaryPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Cloudinary Debug</h1>
           <p className="mt-1 text-sm text-slate-600">
-            Use this page to verify URLs. Click a link to test in a new tab — if it 404s, the public_id or folder is wrong.
+            Use this page to verify URLs. Click a link to test in a new tab - if it 404s, the public_id or folder is wrong.
           </p>
         </div>
 

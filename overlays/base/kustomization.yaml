@@ -2,7 +2,7 @@
 #
 # A cut-down Metal Mart: Postgres, Kafka and RabbitMQ in `infra`, plus
 # inventory-service, order-service and chat-service in `shop`. No frontend,
-# gateway, certs, Argo or visualization apps — this cluster exists to be an
+# gateway, certs, Argo or visualization apps - this cluster exists to be an
 # eval target.
 #
 # Namespaces deliberately match playground (`infra`, `shop`) so every

@@ -6,7 +6,7 @@ const app = express();
 const port = parseInt(process.env.PORT || "80", 10);
 
 let dbUrl = process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/inventory";
-// mirrord branch DB URLs may omit the database name — ensure we connect to "inventory"
+// mirrord branch DB URLs may omit the database name - ensure we connect to "inventory"
 if (dbUrl && !/:\d+\/.+$/.test(dbUrl)) {
   dbUrl += "/inventory";
 }

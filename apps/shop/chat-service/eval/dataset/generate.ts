@@ -5,7 +5,7 @@
  * make, with its arguments computed from the snapshot this script is pointed at.
  *
  * That coupling is the point of the demo. Run it against the frozen fixture and
- * the labels agree with the stubs by construction — including everywhere both
+ * the labels agree with the stubs by construction - including everywhere both
  * have drifted away from what the cluster now holds. Run it against live staging
  * (through mirrord) and the labels describe reality.
  *
@@ -156,10 +156,10 @@ function build(catalogue: Product[]): EvalCase[] {
     }
     const noun = label === "overall" ? "thing" : label;
     add({ input: `What's the cheapest ${noun} you sell? I'll take it.`, expected: order([[winner, 1]]), scoring: "exact", tag: "budget-cheapest" });
-    add({ input: `I'm on a budget — send me your least expensive ${noun}.`, expected: order([[winner, 1]]), scoring: "exact", tag: "budget-cheapest" });
+    add({ input: `I'm on a budget - send me your least expensive ${noun}.`, expected: order([[winner, 1]]), scoring: "exact", tag: "budget-cheapest" });
   }
 
-  // Budget ceilings. Under a cap, buy the dearest item that still fits — a
+  // Budget ceilings. Under a cap, buy the dearest item that still fits - a
   // single answer whenever that price is unique in the catalogue.
   //
   // Both phrasings name that rule outright. Asking for the "best" or "nicest"
@@ -174,7 +174,7 @@ function build(catalogue: Product[]): EvalCase[] {
       skipped.push(`budget-ceiling/${money(cap)}: price tie, no single defensible answer`);
       continue;
     }
-    add({ input: `I've got ${money(cap)} to spend and want to use as much of it as I can — order me the most expensive item that still fits.`,
+    add({ input: `I've got ${money(cap)} to spend and want to use as much of it as I can - order me the most expensive item that still fits.`,
       expected: order([[best, 1]]), scoring: "exact", tag: "budget-ceiling" });
     add({ input: `Order me the priciest thing you sell for ${money(cap)} or less.`,
       expected: order([[best, 1]]), scoring: "exact", tag: "budget-ceiling" });
@@ -191,15 +191,15 @@ function build(catalogue: Product[]): EvalCase[] {
   //
   // An earlier revision generated "I need <stock> of X" and "I need <stock>+25
   // of X" straight from the snapshot's own counts. Those failed the moment
-  // stock moved, which looked like drift detection but was circular — and no
+  // stock moved, which looked like drift detection but was circular - and no
   // one writes a test asking for exactly the number of units in the warehouse.
   const bulkPhrasings: Array<(n: string, q: number) => string> = [
     (n, q) => `I need ${q} ${n}s for a conference next month.`,
-    (n, q) => `Can you do a bulk order — ${q} of the ${n}?`,
+    (n, q) => `Can you do a bulk order - ${q} of the ${n}?`,
     (n, q) => `We want ${q} ${n}s for an event. Possible?`,
   ];
-  // A flat constant, not derived from the snapshot. Deriving it — max stock plus
-  // a margin — reintroduces exactly the coupling these cases exist to avoid: the
+  // A flat constant, not derived from the snapshot. Deriving it - max stock plus
+  // a margin - reintroduces exactly the coupling these cases exist to avoid: the
   // figure would sit above stock in the snapshot it was computed from and below
   // it in a catalogue that has since restocked, so the expected answer would
   // flip with the data. 5000 units of a sticker is beyond any merch shop, which
@@ -227,7 +227,7 @@ function build(catalogue: Product[]): EvalCase[] {
   // Scored on the action only: when nothing of that kind exists, several
   // substitutes are equally defensible.
   const kindPhrasings = [
-    (k: string) => `I'm looking for a ${k} — what have you got?`,
+    (k: string) => `I'm looking for a ${k} - what have you got?`,
     (k: string) => `Any chance you sell a ${k}?`,
     (k: string) => `Do you do ${k}s?`,
   ];
@@ -290,7 +290,7 @@ function balance(all: EvalCase[], n: number): EvalCase[] {
 
   // Spread the sample across each class rather than taking its first N. Cases
   // are generated in product order, so a prefix silently drops every
-  // high-numbered product — a suite capped low would omit whole products and
+  // high-numbered product - a suite capped low would omit whole products and
   // any drift affecting them, which looks like the agent improving. Striding
   // keeps the product range intact at every size.
   const kept: EvalCase[] = [];

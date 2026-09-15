@@ -3,8 +3,8 @@
  *
  * The command is deliberately identical in both halves of the demo:
  *
- *   npm run eval                          # stubbed — no service URLs in the env
- *   mirrord ci start -- npm run eval      # live — URLs arrive from the target pod
+ *   npm run eval                          # stubbed - no service URLs in the env
+ *   mirrord ci start -- npm run eval      # live - URLs arrive from the target pod
  *
  * Nothing here inspects mirrord, and there is no --stub flag. Dependency choice
  * happens in depsFromEnv(): service URLs present means live, absent means the
@@ -30,7 +30,7 @@ const threshold = Number(arg("threshold", "0.85"));
 // Wall-clock is dominated by model latency per case, so this is the setting that
 // decides how long a run takes: 84 cases go from 105s at 8 to 59s at 16. Going
 // to 32 saves only another 12s and raises the chance of a rate-limit mid-run,
-// which surfaces as errored cases scored as failures — survivable in a run you
+// which surfaces as errored cases scored as failures - survivable in a run you
 // expect to fail, not in one you need to pass.
 const concurrency = Number(arg("concurrency", process.env.EVAL_CONCURRENCY ?? "16"));
 const limit = Number(arg("limit", "0"));
@@ -40,7 +40,7 @@ const outPath = arg("out", "eval/results/latest.json");
  * Takes an even spread across case classes rather than the first N.
  *
  * The dataset is grouped by class, so a plain slice would be entirely
- * exact-name — the easiest class — and a subset run would report a score that
+ * exact-name - the easiest class - and a subset run would report a score that
  * says nothing about the hard cases. Round-robins the classes instead, in
  * order, so a subset stays deterministic and representative.
  */

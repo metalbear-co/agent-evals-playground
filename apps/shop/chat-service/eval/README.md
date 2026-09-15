@@ -1,8 +1,8 @@
 # Shopping agent evals
 
-A labelled dataset and a runner for the Metal Mart shopping agent — the
-assistant that reads the support chat, works out what the customer wants, and
-commits to a single action.
+A labelled dataset and a runner for the Metal Mart shopping agent, the assistant
+that reads the support chat, works out what the customer wants, and commits to a
+single action.
 
 The point of interest is not the score. It is that the same command produces a
 different score depending on what the agent is allowed to talk to, and only one
@@ -11,8 +11,8 @@ of those scores describes the shop.
 ## What is being evaluated
 
 The shopping agent is a tool-calling loop (`src/agent/loop.ts`). Given one
-customer message it may call any of four read tools — `search_products`,
-`get_product`, `check_stock`, `get_order` — as many times as it needs, and must
+customer message it may call any of four read tools (`search_products`,
+`get_product`, `check_stock`, `get_order`) as many times as it needs, and must
 finish by calling exactly one of three terminal tools:
 
 | Terminal tool | Meaning |
@@ -27,7 +27,7 @@ it. The label for a case is that call.
 
 ## The dataset
 
-`dataset/shopping-agent-v1.jsonl` — one case per line:
+`dataset/shopping-agent-v1.jsonl` holds one case per line:
 
 ```json
 {
@@ -48,7 +48,7 @@ grouped into classes that each probe one thing:
 | --- | --- |
 | `exact-name` | a product named exactly as the catalogue spells it |
 | `fuzzy-name` | the same product named loosely, in lower case |
-| `quantity-words` | "a couple of", "a pair of" — quantities written as words |
+| `quantity-words` | quantities written as words: "a couple of", "a pair of" |
 | `multi-item` | two products in one message, so the total has to be summed |
 | `kind-missing` | a category the shop does not carry at all |
 | `bulk-beyond-stock` | a conference-sized quantity nobody stocks |
@@ -57,7 +57,7 @@ grouped into classes that each probe one thing:
 | `refund` | a problem with an order the customer already has |
 
 Classes whose answer would be ambiguous in a given catalogue are skipped rather
-than labelled arbitrarily — if two products tie on price, "the cheapest shirt"
+than labelled arbitrarily. If two products tie on price, "the cheapest shirt"
 has no single defensible answer, and the generator says so instead of picking
 one.
 
@@ -68,12 +68,12 @@ one.
 Three modes, declared per case, because not every case has the same kind of
 right answer:
 
-- **`exact`** — the tool and every argument must match. Used where there is one
+- **`exact`**. The tool and every argument must match. Used where there is one
   defensible answer: a computed order total, a specific order id.
-- **`tool`** — only the tool must match. Used where the *action* is unambiguous
+- **`tool`**. Only the tool must match. Used where the *action* is unambiguous
   but the argument is taste. "We don't sell mugs, offer something else" has many
   reasonable substitutes; scoring the substitute would measure preference.
-- **`request`** — the tool plus `instead_of`, the request that could not be
+- **`request`**. The tool plus `instead_of`, the request that could not be
   filled. Splits an `offer_alternative` case into the half with a right answer
   (what was unfillable) and the half without (what to offer instead), and scores
   only the first.
@@ -109,8 +109,8 @@ Everything after `--` is byte-identical to the bare run. The process still
 executes locally, but inherits the target deployment's environment and network,
 so the service URLs arrive populated and resolve inside the cluster.
 
-The run is read-only. It places no orders — `execute: false` stops at the
-terminal call — takes no traffic from the target, and does not patch or restart
+The run is read-only. It places no orders, because `execute: false` stops at the
+terminal call. It takes no traffic from the target and does not patch or restart
 it. Many runs can go at once.
 
 ### Flags
@@ -124,13 +124,13 @@ it. Many runs can go at once.
 | `--out` | `eval/results/latest.json` | where full results are written |
 
 `--limit` round-robins the classes rather than slicing, so a subset stays
-representative — a plain slice would be entirely `exact-name`, the easiest class.
+representative. A plain slice would be entirely `exact-name`, the easiest class.
 
 ## Keeping the labels honest
 
 A label is only as good as the catalogue it came from. A suite generated from a
 snapshot will agree with that snapshot by construction, including everywhere the
-snapshot has drifted from the shop — prices change, stock moves, and product
+snapshot has drifted from the shop. Prices change, stock moves, and product
 lines get added that the suite has never seen.
 
 `npm run eval:refresh` re-derives the whole suite from the catalogue a running

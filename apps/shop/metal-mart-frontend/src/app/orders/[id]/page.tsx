@@ -80,7 +80,7 @@ export default function OrderPage() {
       <main className="flex-1 px-6 py-8">
         <div className="mx-auto max-w-2xl">
           <h1 className="mb-8 text-2xl font-bold tracking-tight text-slate-900">
-            Order #{order?.id ?? id ?? "—"}
+            Order #{order?.id ?? id ?? "-"}
           </h1>
           {error && (
             <p

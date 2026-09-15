@@ -79,7 +79,7 @@ export default function ProductDetailPage() {
                 {imageUrls.length > 0 ? (
                   <ProductImage
                     src={imageUrls[selectedIndex]}
-                    alt={labels ? `${product.name} — ${labels[selectedIndex]}` : product.name}
+                    alt={labels ? `${product.name} - ${labels[selectedIndex]}` : product.name}
                     className="h-full w-full object-cover"
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"

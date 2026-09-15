@@ -3,7 +3,7 @@
 # chat-service's MirrordSplitConfig references this MirrordPropertyList by name.
 # The canonical copy lives at
 # manifests/shop/base/app/delivery-service/mirrord-property-list.yaml, next to the
-# service it was first written for — and this cluster does not run delivery-service,
+# service it was first written for - and this cluster does not run delivery-service,
 # so that copy never gets applied here. Kustomize will not pull a single file from
 # outside the overlay, hence the duplicate; keep the two in step if the broker moves.
 #

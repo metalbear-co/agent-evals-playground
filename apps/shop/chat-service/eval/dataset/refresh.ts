@@ -3,7 +3,7 @@
  *
  * The dataset ships with labels computed from a fixture frozen in March. Prices,
  * stock and the product range have all moved since, so those labels describe a
- * shop that no longer exists — and a run against real dependencies fails cases
+ * shop that no longer exists - and a run against real dependencies fails cases
  * where the agent was right and the label was stale.
  *
  * The fix is not to freeze a newer fixture, which only resets the clock. It is
@@ -26,7 +26,7 @@ import { liveDeps } from "../../src/agent/deps.js";
  * The largest per-class count in an existing dataset, or null if there is none.
  *
  * The generator caps every class at the same size, so the biggest class is the
- * cap that produced the file — except where the catalogue could not fill a
+ * cap that produced the file - except where the catalogue could not fill a
  * class, which is why this takes the maximum rather than any single class.
  */
 function existingPerClass(path: string): number | null {
@@ -72,7 +72,7 @@ async function main(): Promise<void> {
   console.log(`reading the live catalogue from ${inventoryUrl}`);
   const products = await liveDeps({ inventoryUrl, orderUrl }).listProducts();
   if (products.length === 0) {
-    console.error("the catalogue came back empty — refusing to write labels from it");
+    console.error("the catalogue came back empty - refusing to write labels from it");
     process.exit(1);
   }
 

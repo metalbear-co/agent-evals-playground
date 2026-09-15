@@ -38,7 +38,7 @@ import {
 import { ArchitectureGlyph, PgBranchGlyph } from "@/lib/architectureNodeIcons";
 import DatabaseViewerDialog from "./DatabaseViewerDialog";
 
-/** Handles, bold session borders, mirrored edges — matches legend “mirrord control plane”. */
+/** Handles, bold session borders, mirrored edges - matches legend “mirrord control plane”. */
 const MIRRORD_PLANE_BORDER = groupPalette.mirrord.border;
 /** Baseline drop shadow under mirrord session nodes (same hue as control plane, not red/violet-600). */
 const MIRRORD_NODE_SHADOW = "0px 30px 60px rgba(79, 70, 229, 0.3)";
@@ -63,7 +63,7 @@ type NodeData = {
   ciRunner?: boolean;
   /** When true, render data.label directly instead of looking up static architectureNodes info */
   focusedCombined?: boolean;
-  /** When true, DB branch matches a preview session key — use blue styling */
+  /** When true, DB branch matches a preview session key - use blue styling */
   matchesPreview?: boolean;
 };
 
@@ -806,10 +806,10 @@ const MirrordNode = ({ id, data }: NodeProps<MirrordNodeType>) => {
   const isDynamicCiRunner = id.startsWith("ci-runner-");
   const useHighlightBorder = data.highlight || isDynamicAgent || isDynamicKafkaTopic || isDynamicSqsQueue || isDynamicRmqQueue || isDynamicLocal || isDynamicLayer || isDynamicPgBranch || isDynamicPreview || isDynamicCiRunner;
   const isOperator = id === "mirrord-operator";
-  /** Static `local-process` or per-session `dynamic-local-*` — styled blue like the Local Machine zone. */
+  /** Static `local-process` or per-session `dynamic-local-*` - styled blue like the Local Machine zone. */
   const isLocalProcess = id === "local-process" || id.startsWith("dynamic-local-");
   const isCiRunnerNode = (isDynamicAgent || isLocalProcess) && data.ciRunner === true;
-  /** Kafka / SQS / RabbitMQ split-queue topics — same border as infrastructure (not a separate legend color). */
+  /** Kafka / SQS / RabbitMQ split-queue topics - same border as infrastructure (not a separate legend color). */
   const isQueueStreamSplitNode =
     isDynamicKafkaTopic || isDynamicSqsQueue || isDynamicRmqQueue;
   const borderColor = isCiRunnerNode
@@ -1025,7 +1025,7 @@ function FocusedFitView({ visibleNodeIds }: { visibleNodeIds: string[] | null })
 
   useEffect(() => {
     if (!visibleNodeIds || visibleNodeIds.length === 0) {
-      // Focused mode closed — reset to full graph view
+      // Focused mode closed - reset to full graph view
       if (prevKeyRef.current !== null) {
         prevKeyRef.current = null;
         setTimeout(() => fitView({ padding: 0.1, duration: 700 }), 50);
@@ -1341,7 +1341,7 @@ export default function VisualizationPage() {
       });
 
       // Agent -> Target (skip if a kafka split replaces this direct path,
-      // or if this is a copy target — the agent IS the replacement for the original service)
+      // or if this is a copy target - the agent IS the replacement for the original service)
       if (
         !kafkaSplitTargets.has(group.targetName) &&
         !group.isCopyTarget
@@ -1631,8 +1631,8 @@ export default function VisualizationPage() {
 
   // Build dynamic nodes for SQS split queues.
   // For each active split queue we create two nodes:
-  //   1. Filtered/ephemeral node (sqs-queue-*) — receives messages matching the filter → local machine
-  //   2. Deployed/original node (sqs-deployed-queue-*) — receives non-matching messages → payment-service
+  //   1. Filtered/ephemeral node (sqs-queue-*) - receives messages matching the filter → local machine
+  //   2. Deployed/original node (sqs-deployed-queue-*) - receives non-matching messages → payment-service
   const sqsQueueNodes = useMemo((): Node<NodeData>[] => {
     if (sqsQueues.length === 0) return [];
     const palette = groupPalette.mirrord;
@@ -1647,7 +1647,7 @@ export default function VisualizationPage() {
     };
     const paymentPos = adjustedNodes.find((n) => n.id === "payment-service")?.position ?? { x: 0, y: 0 };
 
-    // Filtered/ephemeral nodes — connect to mirrord-layer (local machine)
+    // Filtered/ephemeral nodes - connect to mirrord-layer (local machine)
     sqsQueues.forEach((queue, index) => {
       const nodeId = `sqs-queue-${queue.queueName}`;
       nodes.push({
@@ -1685,7 +1685,7 @@ export default function VisualizationPage() {
       });
     });
 
-    // Deployed/original nodes — connect to payment-service (non-matching messages)
+    // Deployed/original nodes - connect to payment-service (non-matching messages)
     sqsQueues.forEach((queue, index) => {
       const nodeId = `sqs-deployed-queue-${queue.originalQueueName}`;
       nodes.push({
@@ -2188,7 +2188,7 @@ export default function VisualizationPage() {
 
     const activeQueueSplits: ActiveQueueSplit[] = [];
 
-    // Kafka — pair Filtered+Fallback topics by sessionId.
+    // Kafka - pair Filtered+Fallback topics by sessionId.
     const kafkaBySession = new Map<string, { filtered?: KafkaEphemeralTopic; fallback?: KafkaEphemeralTopic }>();
     for (const t of kafkaTopics) {
       if (!matchingSessionIds.has(t.sessionId)) continue;
@@ -2209,7 +2209,7 @@ export default function VisualizationPage() {
       });
     }
 
-    // SQS — each queue is self-contained (filtered + original both live on the row).
+    // SQS - each queue is self-contained (filtered + original both live on the row).
     for (const q of sqsQueues) {
       if (!matchingSessionIds.has(q.sessionId)) continue;
       activeQueueSplits.push({
@@ -2852,7 +2852,7 @@ export default function VisualizationPage() {
                   </p>
                 )}
                 <p className={`text-[11px] font-medium ${phaseColor}`}>
-                  {session.phase}{session.failureMessage ? ` — ${session.failureMessage}` : ""}
+                  {session.phase}{session.failureMessage ? ` - ${session.failureMessage}` : ""}
                 </p>
               </div>
             ),
@@ -3028,7 +3028,7 @@ export default function VisualizationPage() {
       if (hasDynamicLocalMachines && (edge.id === "local-to-layer" || edge.id === "layer-to-agent")) continue;
       if (edge.id === "local-to-layer" || edge.id === "layer-to-agent") {
         if (!hasLocalShopSessions) continue;
-        // These edges pass through — skip the SESSION_NODE_IDS filter below
+        // These edges pass through - skip the SESSION_NODE_IDS filter below
         staticEdges.push(edge);
         continue;
       }
@@ -3546,17 +3546,17 @@ export default function VisualizationPage() {
     const activeQueueSplits = focusedViewData.activeQueueSplits;
     const queueSplitProducerIds = new Set(activeQueueSplits.map((s) => s.producerId));
 
-    // Exclude the existing agent→target edge in all focused modes — we replace it
+    // Exclude the existing agent→target edge in all focused modes - we replace it
     // with a correctly-directed edge that tells the right story.
     const isRelevantEdge = (edge: Edge): boolean => {
-      // Always exclude any edge that touches a pg-branch node — those are handled
+      // Always exclude any edge that touches a pg-branch node - those are handled
       // separately by dbBranchEdges so the non-focused versions don't float in space.
       if (
         edge.source.startsWith("pg-branch-") ||
         edge.target.startsWith("pg-branch-")
       ) return false;
       // When a queue split is active for this session, hide the direct producer→target
-      // edge — it's replaced by the producer→operator→{filtered,fallback}→{layer,target}
+      // edge - it's replaced by the producer→operator→{filtered,fallback}→{layer,target}
       // story rendered by queueSplitEdges below.
       if (
         queueSplitProducerIds.has(edge.source) &&
@@ -3570,15 +3570,15 @@ export default function VisualizationPage() {
       return false;
     };
 
-    // Handles for the layer node — static and dynamic variants use different ids.
+    // Handles for the layer node - static and dynamic variants use different ids.
     const layerSourceHandle =
       layerId === "mirrord-layer" ? "layer-source-right" : `${layerId}-source-right`;
 
     // Tunnel edge: agent → mirrord-layer.
-    // The mirrord-layer is the actual tunnel endpoint on the local side — it receives
+    // The mirrord-layer is the actual tunnel endpoint on the local side - it receives
     // intercepted/copied traffic from the agent and delivers it to the local process
     // via LD_PRELOAD syscall interception.
-    // Handles for the agent → layer tunnel — agent exits from bottom, layer receives on top.
+    // Handles for the agent → layer tunnel - agent exits from bottom, layer receives on top.
     const agentSourceHandle = `${agentId}-source-bottom`;
     const layerTargetHandleForTunnel =
       layerId === "mirrord-layer" ? "layer-target-top" : `${layerId}-target-top`;
@@ -3794,7 +3794,7 @@ export default function VisualizationPage() {
         edge.source === targetArchId && downstreamIds.has(edge.target);
 
       if (isUpstreamToTarget) {
-        // Dim the original upstream→target edge — traffic no longer flows through it
+        // Dim the original upstream→target edge - traffic no longer flows through it
         result.push({
           ...edge,
           animated: false,
@@ -3821,7 +3821,7 @@ export default function VisualizationPage() {
         continue;
       }
 
-      // Service→downstream edges are skipped in steal mode — the service gets no
+      // Service→downstream edges are skipped in steal mode - the service gets no
       // traffic so it makes no outbound calls. Local process edges added below.
       if (isTargetToDownstream) continue;
 
@@ -3864,7 +3864,7 @@ export default function VisualizationPage() {
     g.setDefaultEdgeLabel(() => ({}));
     g.setGraph({ rankdir: "LR", nodesep: 60, ranksep: 160 });
 
-    // Only the service-mesh nodes go into dagre — agent, local, pg-branch, and the
+    // Only the service-mesh nodes go into dagre - agent, local, pg-branch, and the
     // queue split satellite nodes (operator + filtered + fallback) are placed manually.
     const dagreIds = [...visibleIds].filter(
       (id) =>
@@ -3972,7 +3972,7 @@ export default function VisualizationPage() {
    */
   const displayNodes = useMemo(() => {
     if (!focusedViewData || !focusedNodePositions) {
-      // Normal mode — add pointer cursor to clickable nodes when sessions are active
+      // Normal mode - add pointer cursor to clickable nodes when sessions are active
       if (!hasShopSessions) return flowNodes;
       return flowNodes.map((node) => {
         if (
@@ -4031,11 +4031,11 @@ export default function VisualizationPage() {
             style: { ...node.style, width: w, height: h },
           };
         }
-        // Any other zone (e.g. preview zones) — hide in focused mode
+        // Any other zone (e.g. preview zones) - hide in focused mode
         return { ...node, hidden: true };
       }
 
-      // local-process is merged into the combined local node — hide it
+      // local-process is merged into the combined local node - hide it
       if (node.id === focusedViewData.localId) return { ...node, hidden: true };
 
       // Hide non-relevant nodes entirely (cleaner than dimming with a new layout)
@@ -4085,7 +4085,7 @@ export default function VisualizationPage() {
         return mapped;
       }
 
-      // Glow on the agent — the cluster-side end of the mirrord tunnel
+      // Glow on the agent - the cluster-side end of the mirrord tunnel
       if (node.id === focusedSession?.agentId) {
         const animation =
           focusedMode === "mirror"
@@ -4122,7 +4122,7 @@ export default function VisualizationPage() {
       }
 
       // Steal mode: only dim the target service itself (it receives no traffic).
-      // Downstream services stay fully visible — the local process still calls them via the layer.
+      // Downstream services stay fully visible - the local process still calls them via the layer.
       if (focusedMode === "steal" && node.id === focusedViewData.targetArchId) {
         mapped = { ...mapped, style: { ...mapped.style, opacity: 0.35, filter: "grayscale(60%)" } };
       }
@@ -4373,7 +4373,7 @@ export default function VisualizationPage() {
               </div>
             </div>
 
-            {/* Tab bar — extra tabs appear when db-branch and/or queue-split are active */}
+            {/* Tab bar - extra tabs appear when db-branch and/or queue-split are active */}
             <div className="px-6 pt-4 pb-3">
               <div className="flex rounded-xl border border-[#E5E7EB] overflow-hidden">
                 {activeBranch && (

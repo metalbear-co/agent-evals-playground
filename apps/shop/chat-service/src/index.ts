@@ -24,7 +24,7 @@ const app = express();
 const port = parseInt(process.env.PORT || "80", 10);
 
 const topic = process.env.KAFKA_TOPIC || "support-chat";
-const BOT_REPLY = "Thanks for reaching out — a support agent will be with you shortly.";
+const BOT_REPLY = "Thanks for reaching out - a support agent will be with you shortly.";
 const SENDERS: Sender[] = ["customer", "agent", "bot"];
 const HEARTBEAT_MS = 15000;
 
@@ -95,7 +95,7 @@ async function startConsumer() {
         // Canned greeting on the first customer message. The baggage header is
         // copied from the consumed message so that during a mirrord queue-split
         // session the bot reply routes back to the same (local) instance.
-        // With the shopping agent on, the bot answers every customer turn — it
+        // With the shopping agent on, the bot answers every customer turn - it
         // cannot complete an order otherwise. With it off, the original
         // behaviour stands: greet once, then a human takes the conversation.
         const shouldReply =

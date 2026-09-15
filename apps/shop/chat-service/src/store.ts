@@ -58,7 +58,7 @@ export function getConversation(id: string): Conversation | undefined {
  * Removes a conversation from the in-memory store. Its message ids stay in
  * seenIds so a topic replay doesn't resurrect the thread mid-run; the next
  * customer message re-creates the conversation, which makes the bot greet
- * again. Kafka retains the old messages — this only clears live state.
+ * again. Kafka retains the old messages - this only clears live state.
  */
 export function deleteConversation(id: string): boolean {
   return conversations.delete(id);
@@ -74,7 +74,7 @@ export function broadcastDeleted(conversationId: string): void {
   }
 }
 
-/** True when no agent or bot has spoken yet — the bot greets only then. */
+/** True when no agent or bot has spoken yet - the bot greets only then. */
 export function awaitingFirstResponse(conversationId: string): boolean {
   const convo = conversations.get(conversationId);
   if (!convo) return false;

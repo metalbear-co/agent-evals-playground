@@ -23,7 +23,7 @@ import {
 const SZ = 22;
 const stroke = 2;
 
-/** Matches `groupPalette.infra.border` / queue border — icon stroke for infra-class nodes. */
+/** Matches `groupPalette.infra.border` / queue border - icon stroke for infra-class nodes. */
 const INFRA_ICON_STROKE = groupPalette.infra.border;
 
 function wrap(children: ReactNode) {
@@ -97,7 +97,7 @@ export function ArchitectureGlyph({
   return wrap(<Boxes {...p} style={{ color: INFRA_ICON_STROKE }} />);
 }
 
-/** Dynamic DB branch node — database glyph; preview branches use sky blue. */
+/** Dynamic DB branch node - database glyph; preview branches use sky blue. */
 export function PgBranchGlyph({ matchesPreview }: { matchesPreview: boolean }) {
   const color = matchesPreview ? "#0EA5E9" : "#336791";
   return wrap(

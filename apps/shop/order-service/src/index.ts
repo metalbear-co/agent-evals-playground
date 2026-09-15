@@ -196,7 +196,7 @@ async function createOrderDirect(
     );
   } else {
     console.warn(
-      "[Order] SQS_QUEUE_URL unset — skipping payment SQS (local dev; payment-service will not debit)"
+      "[Order] SQS_QUEUE_URL unset - skipping payment SQS (local dev; payment-service will not debit)"
     );
   }
 

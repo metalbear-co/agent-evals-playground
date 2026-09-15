@@ -20,7 +20,7 @@ app.set("trust proxy", 1);
 app.use(cors());
 app.use(express.json());
 
-/** Proxies/CDNs must not cache snapshot or operator-status — demo query params must always hit origin. */
+/** Proxies/CDNs must not cache snapshot or operator-status - demo query params must always hit origin. */
 app.use((req, res, next) => {
   const p = req.path ?? "";
   if (p.includes("snapshot") || p.includes("operator-status")) {
@@ -1131,7 +1131,7 @@ app.get(operatorStatusPaths, async (req, res) => {
     res.json(response);
     return;
   }
-  // ?sharable_visualization=true — sharable demo snapshot shape + single Adna / inventory-service session.
+  // ?sharable_visualization=true - sharable demo snapshot shape + single Adna / inventory-service session.
   if (requestUseSharableVisualizationMock) {
     const s = mockSharableVisualizationOperatorSession;
     const durationSeconds = Math.floor(
@@ -1538,7 +1538,7 @@ const mockOperatorStatus: OperatorStatusResponse = {
 };
 
 /**
- * Mock for ?chatSplittingMock — a single Kafka split session on chat-service,
+ * Mock for ?chatSplittingMock - a single Kafka split session on chat-service,
  * mirroring the delivery-service pattern in mockOperatorStatus but focused on
  * the support-chat topic for demoing chat message routing.
  */
@@ -1775,7 +1775,7 @@ const K8S_SERVICE_ACCOUNT_TOKEN_PATH =
 
 /**
  * In-cluster config only when pod SA exists; otherwise ~/.kube/config.
- * loadFromCluster() does not throw — without this guard, local runs use https://undefined:undefined.
+ * loadFromCluster() does not throw - without this guard, local runs use https://undefined:undefined.
  */
 const loadKubeConfiguration = (): KubeConfig | null => {
   const kubeConfig = new KubeConfig();
@@ -2030,7 +2030,7 @@ const resolvePgBranchConnection = async (
     }
     console.log(`[db-resolve] discovered database name: "${dbName}" from branch pod ${podIp}`);
   } catch (err) {
-    // Pod may still be starting — return undefined so the caller retries
+    // Pod may still be starting - return undefined so the caller retries
     // on the next request instead of caching a wrong fallback.
     console.warn(`[db-resolve] failed to discover db name from ${podIp}:`, err instanceof Error ? err.message : err);
     return undefined;
@@ -2104,7 +2104,7 @@ app.get(dbTablesPaths, dbRateLimiter, async (req, res) => {
   } catch (error) {
     // If the connection failed and this was a cached dynamic connection, invalidate and retry once
     if (dynamicPgConnections.has(dbId)) {
-      console.warn("Connection failed for cached db:", dbId, "— retrying with fresh resolution");
+      console.warn("Connection failed for cached db:", dbId, "- retrying with fresh resolution");
       const oldConn = dynamicPgConnections.get(dbId)!;
       dynamicPgConnections.delete(dbId);
       const oldPool = pgPools.get(oldConn);
@@ -2195,7 +2195,7 @@ app.get(dbTableDataPaths, dbRateLimiter, async (req, res) => {
     res.json(result);
   } catch (error) {
     if (dynamicPgConnections.has(dbId)) {
-      console.warn("Connection failed for cached db:", dbId, "— retrying with fresh resolution");
+      console.warn("Connection failed for cached db:", dbId, "- retrying with fresh resolution");
       const oldConn = dynamicPgConnections.get(dbId)!;
       dynamicPgConnections.delete(dbId);
       const oldPool = pgPools.get(oldConn);

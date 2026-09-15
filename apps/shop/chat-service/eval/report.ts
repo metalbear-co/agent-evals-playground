@@ -13,7 +13,7 @@ export function renderReport(summary: EvalSummary, results: CaseResult[]): strin
 
   const lines: string[] = [];
 
-  lines.push(`## Shopping agent eval — ${summary.depsKind === "live" ? "real dependencies" : "stubbed dependencies"}`);
+  lines.push(`## Shopping agent eval - ${summary.depsKind === "live" ? "real dependencies" : "stubbed dependencies"}`);
   lines.push("");
   if (summary.depsKind === "stub") {
     lines.push(
@@ -21,7 +21,7 @@ export function renderReport(summary: EvalSummary, results: CaseResult[]): strin
     );
     lines.push("");
   }
-  lines.push(`**${mark}** — ${summary.passed}/${summary.total} correct (${pct(summary.accuracy)}), gate ${pct(summary.threshold)}`);
+  lines.push(`**${mark}** - ${summary.passed}/${summary.total} correct (${pct(summary.accuracy)}), gate ${pct(summary.threshold)}`);
   lines.push("");
   lines.push("| metric | value |");
   lines.push("| --- | --- |");
@@ -29,7 +29,7 @@ export function renderReport(summary: EvalSummary, results: CaseResult[]): strin
   lines.push(`| cases | ${summary.total} |`);
   lines.push(`| exact match | ${pct(summary.accuracy)} |`);
   lines.push(`| correct action, any arguments | ${pct(summary.toolAccuracy)} |`);
-  lines.push(`| gate | ${pct(summary.threshold)} — ${mark} |`);
+  lines.push(`| gate | ${pct(summary.threshold)} - ${mark} |`);
   lines.push("");
 
   lines.push("### By case class");
@@ -59,7 +59,7 @@ export function renderReport(summary: EvalSummary, results: CaseResult[]): strin
     lines.push("| --- | --- | --- | --- | --- |");
     for (const f of failures) {
       const expected = `${f.case.expected.tool} ${JSON.stringify(f.case.expected.args)}`;
-      const got = f.actual ? `${f.actual.tool} ${JSON.stringify(f.actual.args)}` : "—";
+      const got = f.actual ? `${f.actual.tool} ${JSON.stringify(f.actual.args)}` : "-";
       lines.push(
         `| ${f.case.id} | ${escape(f.case.input)} | ${escape(truncate(expected))} | ${escape(truncate(got))} | ${escape(f.reason)} |`
       );

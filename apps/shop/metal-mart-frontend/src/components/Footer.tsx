@@ -8,7 +8,7 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export default function Footer() {
   const [bannerText, setBannerText] = useState(
-    "Official MetalBear swag — gear up for faster development"
+    "Official MetalBear swag - gear up for faster development"
   );
 
   useEffect(() => {

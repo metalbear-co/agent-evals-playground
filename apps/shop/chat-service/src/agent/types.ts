@@ -38,7 +38,7 @@ export type TerminalCall =
         /**
          * The request that could not be filled, when it names a product we
          * carry. Absent when the customer asked for something outside the
-         * catalogue entirely — there is no id for a mug we do not sell.
+         * catalogue entirely - there is no id for a mug we do not sell.
          */
         instead_of?: { product_id: number; quantity: number };
       };

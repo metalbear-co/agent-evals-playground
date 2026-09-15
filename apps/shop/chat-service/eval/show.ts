@@ -2,8 +2,8 @@
  * Prints the dataset in a form you can read off a screen.
  *
  * The scorecard says how many cases passed; it never says what a case is. This
- * shows what the suite actually asserts — a customer message, and the tool call
- * the agent is expected to end its turn with — so the score means something to
+ * shows what the suite actually asserts - a customer message, and the tool call
+ * the agent is expected to end its turn with - so the score means something to
  * someone seeing it for the first time.
  *
  *   npm run eval:show              one case per class

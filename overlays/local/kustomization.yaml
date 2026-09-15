@@ -1,4 +1,4 @@
-# The demo on any cluster at all — kind, minikube, a namespace someone gave you.
+# The demo on any cluster at all - kind, minikube, a namespace someone gave you.
 #
 # No ingress, no certificate, no cloud types. Reach the storefront with:
 #

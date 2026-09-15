@@ -3,15 +3,15 @@ import type { TerminalCall } from "../src/agent/types.js";
 /**
  * How strictly a case is judged.
  *
- * `exact`  — tool name and every argument must match. Used wherever the case has
+ * `exact`  - tool name and every argument must match. Used wherever the case has
  *            one defensible answer: a computed order total, a specific order id,
  *            a product family with exactly one member.
- * `tool`   — only the tool name must match. Used where the right *action* is
- *            unambiguous but the specific argument is a judgement call — chiefly
+ * `tool`   - only the tool name must match. Used where the right *action* is
+ *            unambiguous but the specific argument is a judgement call - chiefly
  *            "we don't sell that, offer something else", where any of several
  *            products would be a reasonable substitute. Scoring these on the
  *            argument would measure taste, not correctness.
- * `request` — tool name plus `instead_of`: the request the agent could not
+ * `request` - tool name plus `instead_of`: the request the agent could not
  *            fill. Splits an offer_alternative case into the half that has a
  *            right answer (which request was unfillable) and the half that does
  *            not (which substitute to offer), and scores only the first.

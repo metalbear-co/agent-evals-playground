@@ -1,7 +1,7 @@
 # Attaches the BackendConfig to the frontend service.
 #
 # Without this annotation the Ingress builds its backend with default settings
-# and ignores frontend-backendconfig entirely — the /shop health check and the
+# and ignores frontend-backendconfig entirely - the /shop health check and the
 # extended SSE timeout would both be silently dropped, and the site would answer
 # 502 because / returns 404.
 #

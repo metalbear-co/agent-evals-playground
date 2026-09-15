@@ -62,7 +62,7 @@ export default function ChatWidget() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, open]);
 
-  // The support page has its own chat surface — no customer widget there.
+  // The support page has its own chat surface - no customer widget there.
   if (pathname?.startsWith("/support")) return null;
 
   function toggleOpen() {

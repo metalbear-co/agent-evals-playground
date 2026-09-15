@@ -95,7 +95,7 @@ export function liveDeps(opts: {
  *
  * This is the stubbed half of the demo. The fixture and the eval labels were
  * generated from the same snapshot, so a stubbed run agrees with its labels by
- * construction — including where both have drifted away from what the cluster
+ * construction - including where both have drifted away from what the cluster
  * actually holds.
  */
 export function stubDeps(fixturePath: string): ShopDeps {
@@ -131,7 +131,7 @@ export function stubDeps(fixturePath: string): ShopDeps {
  *
  * Live is chosen whenever the service URLs are present. Under `mirrord ci start`
  * they arrive from the target pod, so the eval command needs no flag to switch
- * modes — which is what lets the CI step stay byte-identical between the two
+ * modes - which is what lets the CI step stay byte-identical between the two
  * runs.
  */
 export function depsFromEnv(baggage?: string): ShopDeps {

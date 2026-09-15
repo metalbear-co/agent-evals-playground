@@ -6,7 +6,7 @@ import type { OrderItem, TerminalCall } from "./types.js";
  * Tool surface for the shopping agent.
  *
  * Read tools answer questions about the catalogue and past orders. The three
- * terminal tools end the turn, and one of them — with its arguments — is what
+ * terminal tools end the turn, and one of them - with its arguments - is what
  * each eval case is labelled with.
  */
 export const TOOLS: Anthropic.Tool[] = [
@@ -75,7 +75,7 @@ export const TOOLS: Anthropic.Tool[] = [
     name: "place_order",
     description:
       "Place the customer's order. Ends the conversation turn. total_cents must be the sum of " +
-      "each product's real price multiplied by its quantity — look the prices up first rather " +
+      "each product's real price multiplied by its quantity - look the prices up first rather " +
       "than assuming them.",
     input_schema: {
       type: "object",
@@ -117,7 +117,7 @@ export const TOOLS: Anthropic.Tool[] = [
           type: "object",
           description:
             "The request that could not be filled. Give this whenever the customer asked for a " +
-            "product in the catalogue — including when the problem is the quantity rather than " +
+            "product in the catalogue - including when the problem is the quantity rather than " +
             "the product. Omit it only when they asked for something we do not carry at all, " +
             "which has no product id.",
           properties: {
@@ -228,7 +228,7 @@ export async function runReadTool(
       const strict = all.filter((p) => terms.every((t) => haystackOf(p).includes(t)));
       if (strict.length > 0) return strict;
 
-      // Nothing matched everything — fall back to ranked partial matches so the
+      // Nothing matched everything - fall back to ranked partial matches so the
       // agent gets candidates to reason about instead of a dead end.
       const ranked = all
         .map((p) => ({ p, score: terms.filter((t) => haystackOf(p).includes(t)).length }))

@@ -86,7 +86,7 @@ export function judge(
   // `request` scoring splits an offer_alternative case in two: which request
   // could not be filled has a right answer, which substitute to offer does not.
   // Only the first half is scored. A label without instead_of has no request to
-  // check — the customer asked for something outside the catalogue — so it
+  // check - the customer asked for something outside the catalogue - so it
   // falls back to matching the action alone.
   if (evalCase.scoring === "request") {
     if (!toolCorrect) {
@@ -117,7 +117,7 @@ export function judge(
   }
 
   // `tool` scoring is for cases where the right action is clear but the specific
-  // argument is a judgement call — see the note on Scoring in types.ts.
+  // argument is a judgement call - see the note on Scoring in types.ts.
   if (evalCase.scoring === "tool") {
     return {
       ...base,

@@ -2,14 +2,14 @@
 #
 # The agent's tools are HTTP calls to inventory-service and order-service, so it
 # cannot be evaluated without them. This runs the eval inside a mirrord session
-# against a cluster that already exists — no environment to stand up, no mocks
+# against a cluster that already exists - no environment to stand up, no mocks
 # to maintain.
 #
 # Nothing here selects "mirrord mode". The agent picks its dependencies in
 # depsFromEnv(): service URLs present means real HTTP, absent means a frozen
 # catalogue fixture. Those URLs come from the target pod's environment, which is
 # what the session supplies. Run the same command outside a session and it
-# quietly reads the fixture instead — which is the failure this whole demo is
+# quietly reads the fixture instead - which is the failure this whole demo is
 # about, so the run banner says which one it used.
 name: Agent evals - real dependencies
 
@@ -56,7 +56,7 @@ jobs:
           cache-dependency-path: apps/shop/chat-service/package-lock.json
 
       # EVAL_KUBECONFIG_BASE64 is the eval cluster's kubeconfig, with its
-      # current-context already set — generate it with:
+      # current-context already set - generate it with:
       #   gcloud container clusters get-credentials <cluster> \
       #     --zone <zone> --project <project>
       #   kubectl config view --raw --minify | base64
