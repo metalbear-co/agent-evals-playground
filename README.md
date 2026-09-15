@@ -26,7 +26,9 @@ for the substance.
 ## What you need
 
 - a Kubernetes cluster you can reach — kind and minikube are fine
-- [mirrord](https://metalbear.com/mirrord/docs/overview/quick-start/)
+- the [mirrord Operator](https://metalbear.com/mirrord/docs/overview/teams/)
+  installed on it, and the [mirrord
+  CLI](https://metalbear.com/mirrord/docs/overview/quick-start/) locally
 - an Anthropic API key
 - Node 20+
 
@@ -63,6 +65,17 @@ mirrord exec --config-file ../../../.mirrord/agent-evals.json -- npm run eval
 The eval process runs on your machine but inherits `chat-service`'s environment
 and network, so it reads the real catalogue and real stock. Nothing is deployed
 and no environment is created.
+
+**A full run is not free.** 66 cases, each several model calls with thinking on,
+comes to a few dollars against a frontier model. While you are finding your way
+around, run a cheap subset instead — evenly spread across the case classes, so
+the score still means something:
+
+```bash
+mirrord exec --config-file ../../../.mirrord/agent-evals.json -- npm run eval -- --limit 12
+```
+
+`SHOPPING_AGENT_MODEL` picks the model if you would rather score a smaller one.
 
 Drop the `mirrord exec` prefix and the identical command scores against a frozen
 catalogue in `eval/fixtures/` instead — the runner has no flag for this and
@@ -133,7 +146,7 @@ The catalogue is MetalBear merchandise and the eval cases are generated from
 whatever catalogue they are pointed at, so swapping in your own products means
 regenerating the dataset — `npm run eval:refresh` does that from a live cluster.
 
-`mirrord exec` here targets a deployment and takes no traffic from it
-(`incoming: "off"`). The [mirrord
-Operator](https://metalbear.com/mirrord/docs/overview/teams/) is what makes that
-safe for many people and many runs at once on a shared cluster.
+A run borrows `chat-service`'s environment and network and takes no traffic from
+it (`incoming: "off"`). It writes nothing, patches nothing, and restarts nothing
+— the only trace it leaves is one short-lived session pod. So a shared cluster
+can carry many runs at once, and people can keep using the shop while they go.
